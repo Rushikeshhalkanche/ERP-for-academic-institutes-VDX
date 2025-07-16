@@ -27,7 +27,14 @@ urlpatterns = [
     path('', home),  # Root path
     path('admin/', admin.site.urls),
     path('api/students/', include('students.urls')),
+    path('accounts/', include('accounts.urls')),  # ✅ Add this line
+    path('payments/', include('payments.urls')),  
 ]
+
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 

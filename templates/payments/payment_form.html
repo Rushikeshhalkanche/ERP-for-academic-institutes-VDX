@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Make a Payment</title>
+</head>
+<body>
+    <h1>Make a Payment</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <!-- QR Code Section -->
+        <div id="qr-code-section">
+            <h3>Scan QR to Pay</h3>
+            <img src="{% static 'images/upi_qr.png' %}" alt="UPI QR Code" width="200" />
+        </div>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <!-- Script to hide/show QR based on UPI selection -->
+    <script>
+        const paymentModeSelect = document.getElementById("id_payment_mode");
+        const qrSection = document.getElementById("qr-code-section");
+
+        function toggleQR() {
+            if (paymentModeSelect.value === "UPI") {
+                qrSection.style.display = "block";
+            } else {
+                qrSection.style.display = "none";
+            }
+        }
+
+        paymentModeSelect.addEventListener("change", toggleQR);
+        window.onload = toggleQR;
+    </script>
+</body>
+</html>
+
+<!-- Inside your form -->
+<div id="bank-details" style="display:none;">
+    <label>Bank Name:</label>
+    <input type="text" name="bank_name"><br>
+    <label>Card Number:</label>
+    <input type="text" name="card_number"><br>
+    <label>Card Holder Name:</label>
+    <input type="text" name="card_holder_name"><br>
+    <label>Expiry Date:</label>
+    <input type="text" name="expiry_date" placeholder="MM/YYYY"><br>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const paymentModeField = document.querySelector('select[name="payment_mode"]');
+        const bankDetailsDiv = document.getElementById('bank-details');
+
+        function toggleBankFields() {
+            if (paymentModeField.value === 'Card') {
+                bankDetailsDiv.style.display = 'block';
+            } else {
+                bankDetailsDiv.style.display = 'none';
+            }
+        }
+
+        paymentModeField.addEventListener('change', toggleBankFields);
+        toggleBankFields();  // Trigger on load
+    });
+</script>
